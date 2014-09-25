@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>NodeJS REST Adapter Test - Ember.JS</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Testing -->
+  <!--<link rel="stylesheet" href="bower_components/qunit/qunit/qunit.css">-->
+
+</head>
+<body>
+<script type="text/x-handlebars">
+
+  <form
+  {{action 'addComment' on='submit'}}>
+
+  {{input value=title placeholder="Title"}}
+  <br><br>
+  {{textarea value=body placeholder="Body"}}
+  <br><br>
+  <button type="submit">Submit</button>
+  </form>
+
+  <h1>Comments:</h1>
+
+  {{#each model}}
+
+  <p>
+    Tags:
+    {{#each tags}}
+      {{name}}
+    {{else}}
+      None
+    {{/each}}
+  </p>
+
+  <button
+  {{action 'editComment' this}}>Edit</button>
+  <button
+  {{action 'deleteComment' this}}>Delete</button>
+  {{#if editing}}
+  <form
+  {{action 'updateComment' this on='submit'}}>
+
+  {{input value=title placeholder="Title"}}
+  <br><br>
+  {{textarea value=body placeholder="Body"}}
+  <br><br>
+  <button type="submit">Done</button>
+  </form>
+  {{else}}
+  <h2>{{title}}</h2>
+  <p>{{body}}</p>
+  {{/if}}
+  {{/each}}
+</script>
+
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/handlebars/handlebars.js"></script>
+<script src="bower_components/ember/ember.js"></script>
+<script src="bower_components/ember-data/ember-data.js"></script>
+<script src="app.js"></script>
+
+<!--<div id="ember-testing"></div>-->
+<!-- Testing -->
+<!--<div id="qunit"></div>-->
+<!--<div id="qunit-fixture"></div>-->
+<!--<script src="bower_components/qunit/qunit/qunit.js"></script>-->
+<!--<script src="tests.js"></script>-->
+
+</body>
+</html>

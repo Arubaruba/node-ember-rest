@@ -1,0 +1,27 @@
+{
+  "name": "ember-rest-test",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Arubaruba/node-rest",
+  "authors": [
+    "Arubaruba <shadowstep7@gmail.com>"
+  ],
+  "main": "tests/ember/run.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "resolutions": {
+    "ember": "~1.7.0"
+  },
+  "dependencies": {
+    "ember": "~1.7.0",
+    "ember-data": "~1.0.0-beta.10"
+  },
+  "devDependencies": {
+    "qunit": "~1.15.0"
+  }
+}

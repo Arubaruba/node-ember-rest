@@ -1,0 +1,23 @@
+{
+  "name": "node-rest",
+  "version": "0.0.0",
+  "description": "A rest adapter for Ember which words with the other node modules",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/run.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Arubaruba/node-rest.git"
+  },
+  "author": "Andreas Stocker",
+  "license": "Apache2",
+  "bugs": {
+    "url": "https://github.com/Arubaruba/node-rest/issues"
+  },
+  "devDependencies": {
+    "nodeunit": "~0.9.0",
+    "async": "~0.9.0"
+  },
+  "dependencies": {}
+}
