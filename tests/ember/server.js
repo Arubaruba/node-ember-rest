@@ -1,48 +1,45 @@
 var http = require('http');
-var core = require('node-core');
-var db = require('node-db');
-var ember = require('../../index').ember;
+var rest = require('../../index');
+var levelup = require('levelup');
+var url = require('url');
+var fs = require('fs');
 
 var port = 7414;
+var staticDir = '/static';
+var restNamespace = '/data';
 
-var model = ember({
-  route: core.route.handle('/data*', function (request, response, session, router) {
-    router.next(function () {
-      response.end('Invalid path: ' + request.url);
+var serveModels = rest({
+  namespace: restNamespace,
+  levelup: levelup('../levelup-data', {valueEncoding: 'json'})
+});
+
+http.createServer(function (request, response) {
+  var path = url.parse(request.url).pathname;
+
+  if (path.indexOf(staticDir) == 0) {
+    var dir = path.substring(staticDir.length);
+    fs.readFile(__dirname + dir, {encoding: 'utf8'}, function (err, file) {
+      if (err) {
+        response.writeHead(404);
+        response.end('Invalid static url: ' + path);
+      } else {
+        response.writeHead(200);
+        response.end(file);
+      }
     });
-  })
-});
-
-model('comment', 'comments',
-  function (request, response, session, model) {
-    model.allow();
-  },
-  function (request, response, session, model) {
-    model.allow();
+  } else if (path.indexOf(restNamespace) == 0) {
+    serveModels(request, response, {
+      comments: {
+        read: true,
+        write: true
+      },
+      tags: {
+        read: true,
+        write: true
+      }
+    });
+  } else {
+    response.writeHead(404);
+    response.end('Invalid url: ' + path);
   }
-);
-
-model('tag', 'tags',
-  function (request, response, session, model) {
-    model.allow();
-  },
-  function (request, response, session, model) {
-    model.allow();
-  }
-);
-
-core.route.handle('/dump', function (request, response, session, router) {
-  var readStream = session.db.createReadStream();
-  var data = [];
-  readStream.on('data', function (chunk) {
-    if (chunk.key.split('/')[0] != 'sessions')
-      data.push(JSON.stringify(chunk.value));
-  });
-  readStream.on('end', function () {
-    response.end(data.join('</br></br>'));
-  });
-});
-
-core.init({port: port, db: db, staticRoot: __dirname}, function () {
-  console.log('Test server running on port ' + port);
-});
+}).listen(port);
