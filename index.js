@@ -54,7 +54,7 @@ module.exports = function (options) {
             return new promise(function (resolve) {
               if (!id) {
                 return crypto.randomBytesAsync(10).then(function (bytes) {
-                  id = bytes.toString('base64').replace(/[^\w=]/g, '');
+                  id = bytes.toString('base64').replace(/\//g, '');
                   resolve();
                   return null;
                 });
@@ -167,11 +167,13 @@ module.exports = function (options) {
               });
           }
         }
-      }).catch(function (err) {
-        response.writeHead(422);
-        response.end(JSON.stringify({
-          errors: [err]
-        }));
-      });
+      })
+    /*.catch(function (err) {
+     console.error(err);
+     response.writeHead(422);
+     response.end(JSON.stringify({
+     errors: [err]
+     }));
+     });*/
   }
 };

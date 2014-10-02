@@ -26,12 +26,12 @@ App.ApplicationController = Ember.Controller.extend({
   actions: {
     addComment: function () {
       var controller = this;
-      controller.store.createRecord('comment', {
-        title: controller.get('title'),
-        body: controller.get('body')
-      }).save().then(function (comment) {
-        controller.store.createRecord('tag', {name: 'one'}).save().then(function (tag) {
-          comment.get('tags').pushObject(tag).save().then(function() {
+      controller.store.createRecord('tag', {name: 'one'}).save().then(function (tag) {
+        controller.store.createRecord('comment', {
+          title: controller.get('title'),
+          body: controller.get('body')
+        }).save().then(function (comment) {
+          comment.get('tags').pushObject(tag).save().then(function () {
             comment.save();
           });
         });

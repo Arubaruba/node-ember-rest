@@ -28,16 +28,18 @@ http.createServer(function (request, response) {
       }
     });
   } else if (path.indexOf(restNamespace) == 0) {
-    serveModels(request, response, {
-      comments: {
-        read: true,
-        write: true
-      },
-      tags: {
-        read: true,
-        write: true
-      }
-    });
+    setTimeout(function () {
+      serveModels(request, response, {
+        comments: {
+          read: true,
+          write: true
+        },
+        tags: {
+          read: true,
+          write: true
+        }
+      });
+    }, 2000);
   } else {
     response.writeHead(404);
     response.end('Invalid url: ' + path);
