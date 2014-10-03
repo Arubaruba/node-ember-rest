@@ -29,10 +29,11 @@
 
   <p>
     Tags:
+    {{tag.name}}
     {{#each tags}}
-      {{name}}
+    {{name}}
     {{else}}
-      None
+    None
     {{/each}}
   </p>
 
@@ -52,15 +53,18 @@
   </form>
   {{else}}
   <h2>{{title}}</h2>
+
   <p>{{body}}</p>
   {{/if}}
   {{/each}}
 </script>
 
+<script src="/socket.io/socket.io.js"></script>
 <script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/handlebars/handlebars.js"></script>
 <script src="bower_components/ember/ember.js"></script>
 <script src="bower_components/ember-data/ember-data.js"></script>
+<script src="store-update-socket.js"></script>
 <script src="app.js"></script>
 
 <!--<div id="ember-testing"></div>-->

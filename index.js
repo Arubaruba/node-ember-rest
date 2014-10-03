@@ -2,10 +2,17 @@ var promise = require('bluebird');
 var url = require('url');
 var crypto = promise.promisifyAll(require('crypto'));
 var loadDependencies = require('./lib/load-dependencies');
+var socketIO = require('socket.io');
 
 var regex = /(\w+)\/?([^\/]+)?$/;
 
 module.exports = function (options) {
+
+  var io;
+  if (options.socketServer) {
+    io = socketIO(options.socketServer);
+  }
+
   var db = promise.promisifyAll(options.levelup);
 
   return function (request, response, modelDefinitions) {
@@ -46,6 +53,7 @@ module.exports = function (options) {
         }
       }
     }).then(function (models) {
+        console.log(JSON.stringify(models));
         if (Object.keys(models).length > 0 || request.method == 'DELETE') {
           // Perform Write Operation
           if (auth.write === null) {
@@ -88,12 +96,14 @@ module.exports = function (options) {
                       return db.putAsync(model + '/' + id, newData).then(function () {
                         var models = {};
                         newData.id = id;
-                        models[model] = newData;
+                        models[model] = [newData];
                         response.writeHead(200);
                         response.end(JSON.stringify(models));
+                        io.sockets.emit('change', {model: model, id: id, data: models});
                       });
                     } else {
                       return db.delAsync(model + '/' + id).then(function () {
+                        io.sockets.emit('change', {model: model, id: id, data: null});
                         response.writeHead(200);
                         response.end(JSON.stringify({}));
                       });

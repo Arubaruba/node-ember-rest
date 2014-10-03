@@ -1,8 +1,6 @@
 App = Ember.Application.create();
 
-
 App.ApplicationAdapter = DS.RESTAdapter.extend({
-  host: 'http://localhost:7414',
   namespace: 'data'
 });
 
@@ -23,15 +21,21 @@ App.Tag = DS.Model.extend({
 App.ApplicationController = Ember.Controller.extend({
   title: '1',
   body: '',
+  init: function () {
+    storeUpdateSocket(this.store);
+  },
   actions: {
     addComment: function () {
       var controller = this;
       controller.store.createRecord('tag', {name: 'one'}).save().then(function (tag) {
-        controller.store.createRecord('comment', {
+        var comment = controller.store.createRecord('comment', {
           title: controller.get('title'),
           body: controller.get('body')
-        }).save().then(function (comment) {
-          comment.get('tags').pushObject(tag).save().then(function () {
+        });
+        comment.get('tags').then(function () {
+          comment.get('tags').pushObject(tag);
+          // we need to wait for tags to be updated to save the comment
+          comment.get('tags').then(function () {
             comment.save();
           });
         });
@@ -50,8 +54,7 @@ App.ApplicationController = Ember.Controller.extend({
       comment.destroyRecord();
     }
   }
-})
-;
+});
 
 App.ApplicationRoute = Ember.Route.extend({
   model: function () {
